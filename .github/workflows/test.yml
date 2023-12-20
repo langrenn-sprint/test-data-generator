@@ -1,0 +1,32 @@
+name: Install, build and test
+
+on:
+  pull_request:
+    types: [ready_for_review, opened, reopened, synchronize]
+    branches:
+      - main
+
+jobs:
+  install-build-and-test:
+    name: Install, build and test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+          architecture: x64
+
+      - name: Install dependencies
+        run: |-
+          pipx install poetry==1.7.1
+          pipx install nox==2023.4.22
+          pipx inject nox nox-poetry
+
+      - name: Run linters, checks and test with nox
+        run: |-
+          nox
