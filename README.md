@@ -15,7 +15,7 @@ Simple cli tool to generate random test data for a given schema.
 % cd test-data-generator
 % poetry install
 % poetry build
-% pipx install dist/test_data_generator-0.1.0-py3-none-any.whl
+% pipx install dist/test_data_generator-1.0.0-py3-none-any.whl
 ```
 
 ## Usage
