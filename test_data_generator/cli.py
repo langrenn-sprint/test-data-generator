@@ -52,10 +52,8 @@ logging.basicConfig(level=getenv("LOGGING_LEVEL", logging.INFO))
     "--sex",
     "-s",
     help="Sex of contenstants.",
-    type=click.Choice([" ", "K", "M"], case_sensitive=False),
-    default=" ",
+    type=click.Choice(["K", "M"], case_sensitive=False),
     required=False,
-    show_default=True,
 )
 def cli(
     outputfile: str,

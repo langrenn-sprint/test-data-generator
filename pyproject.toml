@@ -3,7 +3,7 @@ authors = ["Stig B. Dørmænen <stigbd@gmail.com>"]
 description = ""
 name = "test-data-generator"
 readme = "README.md"
-version = "0.1.0"
+version = "1.0.0"
 
 [tool.poetry.dependencies]
 faker = "^22.0.0"
