@@ -1,0 +1,128 @@
+name: isonen
+version: 1.0.0
+description: |
+  This is a specification of the isonen properties
+  for the test_data_generator.
+attributes:
+  - Fornavn:
+    property: first_name
+    type: string
+  - Etternavn:
+    property: last_name
+    type: string
+  - E-post:
+    property: email
+    type: string
+  - Mobil:
+    property: phone_number
+    type: string
+  - Adresse:
+    property: street_address
+    type: string
+  - Postnr:
+    property: postcode
+    type: string
+  - Sted:
+    property: city
+    type: string
+  - Alder:
+    property: age
+    type: integer
+    minimum: 10
+    maximum: 20
+  - Fødselsdato:
+    property: date_of_birth
+    type: date
+    minimum_age: 10
+    maximum_age: 20
+  - Kjønn:
+    property: sex
+    type: string
+  - Land:
+    property: current_country
+    type: string
+  - Landskode:
+    property: current_country_code
+    type: string
+  - Buypass ID:
+    property: random_number
+    type: integer
+    digits: 9
+  - Person ID:
+    property: random_number
+    type: integer
+    digits: 7
+  - Klubb:
+    property: custom_string
+    type: string
+  - Klubb-ID:
+    property: random_number
+    type: integer
+    digits: 5
+  - Gruppe-ID:
+    property: random_number
+    type: integer
+    digits: 5
+  - Krets/region-id:
+    property: random_number
+    type: integer
+    digits: 3
+  - Krets/region:
+    property: custom_string
+    type: string
+    value: "Oslo Skikrets"
+  - Sport:
+    property: custom_string
+    type: string
+    value: "Ski"
+  - Øvelse:
+    property: custom_string
+    type: string
+  - Klasse:
+    property: custom_string
+    type: string
+    value: ""
+  # - Sum
+  # - Mva
+  # - Påmeldingsavgift
+  # - Påmeldingsavgift mva
+  # - Helårslisens
+  # - Engangslisens
+  # - Lisens
+  # - Dato
+  # - Kl.
+  - Team:
+    property: custom_string
+    type: string
+    value: ""
+  # - Gymnas
+  # - Påmeldings-ID
+  # - Påmeldingsstatus
+  # - Påmeldt av
+  # - E-post påmelder
+  # - Påmelder betalte
+  # - Påmelder betalte mva
+  # - Betalt
+  # - Transaksjons-ID
+  - Påmeldt dato:
+    property: date
+    type: date
+    format: "%d.%m.%Y"
+  - Påmeldt kl.:
+    property: time
+    type: time
+    format: "%H:%M"
+  # - Deltakerstatus
+  # - Alle betalinger
+  # - Brikkenummer
+  # - Brikkenavn
+  # - Brikkeleverandør
+  # - Kontaktperson fornavn
+  # - Kontaktperson etternavn
+  # - Kontaktperson e-post
+  # - Kontaktperson mobil
+  # - Lag
+  # - Markedskommunikasjon
+  # - Bildesamtykke
+  # - Videosamtykke
+  # - Strømmesamtykke
