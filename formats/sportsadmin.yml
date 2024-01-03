@@ -1,0 +1,91 @@
+name: sportsadmin
+version: 1.0.0
+description: |
+  This is a specification of the sportsadmin properties
+  for the test_data_generator.
+attributes:
+  - Klasse:
+    property: custom_string
+    type: string
+  - Øvelse:
+    property: custom_string
+    type: string
+    value: sprint klassisk
+  - Dato:
+    property: date_this_year
+    type: date
+    format: "%d.%m.%Y"
+    after_today: True
+  - Kl.:
+    property: custom_string
+    type: time
+    format: "%H:%M"
+  - Etternavn:
+    property: last_name
+    type: string
+  - Fornavn:
+    property: first_name
+    type: string
+  - Kjønn:
+    property: sex
+    type: string
+  - Fødselsdato:
+    property: date_of_birth
+    type: date
+    minimum_age: 10
+    maximum_age: 20
+  - Idrettsnr:
+    property: random_number
+    type: integer
+    digits: 9
+  - E-post:
+    property: email
+    type: string
+  - Org.tilhørighet:
+    property: custom_string
+    type: string
+  - Krets/region:
+    property: custom_string
+    type: string
+    value: "Oslo Skikrets"
+  - Brikkenummer:
+    property: random_number
+    type: integer
+    digits: 9
+  - Team:
+    type: string
+    value: ""
+  - Idrettsgymnas:
+    type: string
+    value: ""
+  - Stafettlag:
+    type: string
+    value: ""
+  - Etappe:
+    type: string
+    value: ""
+  - Lagleder:
+    type: string
+    value: ""
+  - Mobil lagleder:
+    type: string
+    value: ""
+  - E-post lagleder:
+    type: string
+    value: ""
+  - Dummy:
+  - Dummy:
+  - Dummy:
+  - Betalt/påmeldt dato:
+    property: date_time_this_year
+    type: date_time
+    format: "%d.%m.%Y %H:%M:%S"
+  - Påmeldt av:
+    property: name
+    type: string
+  - Tlf påmelder:
+    property: phone_number
+    type: string
+  - E-post påmelder:
+    property: email
+    type: string
