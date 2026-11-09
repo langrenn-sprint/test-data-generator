@@ -1,4 +1,5 @@
 """Main CLI for the transform step."""
+
 import logging
 from os import getenv
 
@@ -14,7 +15,7 @@ logging.basicConfig(level=getenv("LOGGING_LEVEL", logging.INFO))
 @click.version_option()
 @click.option("--outputfile", "-o", help="Output file name.", required=True)
 @click.option(
-    "--format",
+    "--output-format",
     "-f",
     help="Output file format.",
     type=click.Choice(["Sportsadmin", "iSonen"], case_sensitive=False),
@@ -55,9 +56,9 @@ logging.basicConfig(level=getenv("LOGGING_LEVEL", logging.INFO))
     type=click.Choice(["K", "M"], case_sensitive=False),
     required=False,
 )
-def cli(
+def cli(  # noqa:PLR0917
     outputfile: str,
-    format: str,
+    output_format: str,
     number_of_rows: int,
     minimum_age: int,
     maximum_age: int,
@@ -65,12 +66,12 @@ def cli(
 ) -> None:
     """CLI for generating test datasets (csv)."""
     click.echo(f"Output file: {outputfile}")
-    click.echo(f"Output format: {format}")
+    click.echo(f"Output format: {output_format}")
     # normalizes format:
-    format = format.lower()
+    output_format = output_format.lower()
     generate_file(
         file_name=outputfile,
-        format=format,
+        output_format=output_format,
         number_of_rows=number_of_rows,
         minimum_age=minimum_age,
         maximum_age=maximum_age,

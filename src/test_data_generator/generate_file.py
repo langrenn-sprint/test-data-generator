@@ -1,5 +1,7 @@
 """Generate a test dataset (csv) with the given number of rows."""
+
 import csv
+from pathlib import Path
 
 from faker import Faker
 
@@ -8,12 +10,12 @@ from .providers.contestant_profile import ContestantProvider, SexLiteral
 fake = Faker("no_NO")
 fake.add_provider(ContestantProvider)
 
-SPORTSADMIN_HEADER = '"Påmeldinger til KM Skagen Oslo Sprint 2022 08.01.2022 - 08.01.2022";;;;;;;;;;;;;;;;;;;;;;;;;;;\n'  # noqa: B950
+SPORTSADMIN_HEADER = '"Påmeldinger til KM Skagen Oslo Sprint 2022 08.01.2022 - 08.01.2022";;;;;;;;;;;;;;;;;;;;;;;;;;;\n'  # noqa: E501
 
 
-def generate_file(
+def generate_file(  # noqa:PLR0917
     file_name: str,
-    format: str,
+    output_format: str,
     number_of_rows: int,
     minimum_age: int,
     maximum_age: int,
@@ -23,16 +25,16 @@ def generate_file(
 
     Args:
         file_name (str): Name of the output file.
-        format (str): Format of the output file.
+        output_format (str): Format of the output file.
         number_of_rows (int): Number of rows to generate.
         minimum_age (int): Minimum age of contestants.
         maximum_age (int): Maximum age of contestants.
         sex (SexLiteral): Sex of contestants.
     """
-    # Extract column names and properties from format:
-    columns = get_columns(format, minimum_age, maximum_age, sex)
-    with open(file_name, "w", newline="", encoding="UTF-8") as file:
-        if format == "sportsadmin":
+    # Extract column names and properties from output_format:
+    columns = get_columns(output_format, minimum_age, maximum_age, sex)
+    with Path(file_name).open("w", newline="", encoding="UTF-8") as file:
+        if output_format == "sportsadmin":
             file.write(SPORTSADMIN_HEADER)
             file.write(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n")
         # Write header
@@ -47,18 +49,21 @@ def generate_file(
         # Generate and write rows:
         for _ in range(number_of_rows):
             contestant = fake.contestant(
-                format=format, minimum_age=minimum_age, maximum_age=maximum_age, sex=sex
+                output_format=output_format,
+                minimum_age=minimum_age,
+                maximum_age=maximum_age,
+                sex=sex,
             )
             csvwriter.writerow(contestant.values())
 
 
 def get_columns(
-    format: str, minimum_age: int, maximum_age: int, sex: SexLiteral
+    output_format: str, minimum_age: int, maximum_age: int, sex: SexLiteral
 ) -> list[str]:
-    """Get columns from format.
+    """Get columns from output_format.
 
     Args:
-        format (str): Format of the output file.
+        output_format (str): Format of the output file.
         minimum_age (int): Minimum age of contestants.
         maximum_age (int): Maximum age of contestants.
         sex (SexLiteral): Sex of contestants.
@@ -67,7 +72,9 @@ def get_columns(
         list: List of columns.
     """
     _contestant = fake.contestant(
-        format=format, minimum_age=minimum_age, maximum_age=maximum_age, sex=sex
+        output_format=output_format,
+        minimum_age=minimum_age,
+        maximum_age=maximum_age,
+        sex=sex,
     )
-    columns = list(_contestant.keys())
-    return columns
+    return list(_contestant.keys())
