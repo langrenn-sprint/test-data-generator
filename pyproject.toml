@@ -17,6 +17,7 @@ build-backend = "hatchling.build"
 dev = [
     "deptry>=0.22.0",
     "pip-audit>=2.7.3",
+    "poethepoet>=0.49.0",
     "pytest>=8.3.4",
     "pytest-cov>=6.0.0",
     "ruff>=0.9.1",
