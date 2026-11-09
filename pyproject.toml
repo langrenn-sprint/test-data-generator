@@ -72,6 +72,7 @@ source = ["src/test_data_generator"]
 
 [tool.coverage.run]
 branch = true
+source = ["test_data_generator"]
 omit = ["tests/*"]
 
 [tool.coverage.report]
