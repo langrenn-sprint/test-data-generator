@@ -1,7 +1,7 @@
 [project]
 name = "test-data-generator"
 version = "1.0.1"
-description = "Simple cli tool to generate random test data for a given schema."
+description = "Simple CLI tool to generate random contestant lists in iSonen or Sportsadmin format."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = ["click>=8.1.8", "faker>=33.3.1"]

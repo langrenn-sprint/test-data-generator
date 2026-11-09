@@ -1,6 +1,6 @@
 # test-data-generator
 
-Simple cli tool to generate random test data for a given schema. It uses the [Faker](https://faker.readthedocs.io/en/master/) library to generate random data based on the provided schema. The schema is defined in a JSON file and can include various types of data such as names, addresses, phone numbers, etc.
+Simple CLI tool to generate random contestant lists for testing langrenn-sprint, in the iSonen or Sportsadmin CSV format. It uses the [Faker](https://faker.readthedocs.io/en/master/) library to generate the data. The columns of each format are documented in `formats/`.
 
 ## Requirements
 
