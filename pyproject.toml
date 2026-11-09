@@ -89,12 +89,12 @@ check-types = { cmd = "uv run ty check ." }
 check-deps = { cmd = "uv run deptry ." }
 audit = { cmd = "uv run pip-audit" }
 unit-tests = { cmd = "uv run pytest -s -- tests/unit" }
-integration-tests = { cmd = "uv run pytest -s --cov --cov-report=term-missing --cov-report=html:.htmlcov -- tests/integration" }
+integration-tests = { cmd = "uv run pytest -s -- tests/integration" }
+test = { cmd = "uv run pytest -s --cov --cov-report=term-missing --cov-report=html:.htmlcov -- tests" }
 release = { sequence = [
     "lint",
     "check-types",
     "check-deps",
     "audit",
-    "unit-tests",
-    "integration-tests",
+    "test",
 ] }
