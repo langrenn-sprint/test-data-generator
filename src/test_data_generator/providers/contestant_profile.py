@@ -1,6 +1,7 @@
 """Module for custom provider contestant_profile."""
-from datetime import date, datetime
-from typing import Dict, Literal, Optional, Union
+
+from datetime import UTC, date, datetime
+from typing import Literal
 
 from faker import Faker
 from faker.providers import BaseProvider
@@ -9,19 +10,19 @@ SexLiteral = Literal["K", "M"]
 
 
 class ContestantProvider(BaseProvider):
-    """This provider is a collection of functions to generate personal profiles and identities."""
+    """This provider is a collection of functions to generate personal profiles and identities."""  # noqa: E501
 
     def contestant(
         self,
-        format: str,
+        output_format: str,
         minimum_age: int,
         maximum_age: int,
-        sex: Optional[SexLiteral] = None,
-    ) -> Dict[str, Union[int, str, date, SexLiteral]]:
+        sex: SexLiteral | None = None,
+    ) -> dict[str, int | str | date | SexLiteral]:
         """Creates a contestant-profile.
 
         Args:
-            format (str): the format of the resulting contestant
+            output_format (str): the output format of the resulting contestant
             minimum_age (int): the minimum age of the contestant
             maximum_age (int): the maximum age of the contestant
             sex (SexLiteral): the sex of the contestant ('K' or 'M')
@@ -30,26 +31,30 @@ class ContestantProvider(BaseProvider):
             Dict[str, Union[int, str, date, SexLiteral]]: a contestant dictionary
         """
         date_of_birth_ = self.generator.date_of_birth(
-            tzinfo=None, minimum_age=minimum_age, maximum_age=maximum_age
+            tzinfo=UTC, minimum_age=minimum_age, maximum_age=maximum_age
         )
-        age_ = date.today().year - date_of_birth_.year
-        # if sex is empty, assign a radnom value:
+
+        # if sex is empty, assign a random value:
         sex_: SexLiteral
-        if sex == "K" or sex == "M":
-            sex_ = sex
-        else:
-            sex_ = self.random_element(["K", "M"])
+
+        sex_ = sex if sex in {"K", "M"} else self.random_element(["K", "M"])
 
         if sex_ == "K":
             first_name = self.generator.first_name_female()
             last_name = self.generator.last_name_female()
-        elif sex_ == "M":
+        else:
             first_name = self.generator.first_name_male()
             last_name = self.generator.last_name_male()
-        age_class_ = calculate_age_class(format=format, sex=sex_, age=age_)
+
+        age_class_ = calculate_age_class(
+            output_format=output_format,
+            sex=sex_,
+            date_of_birth=date_of_birth_,
+            today=datetime.now(tz=UTC).date(),
+        )
         club_ = self.random_element(list_of_clubs)
 
-        if format.lower() == "isonen":
+        if output_format.lower() == "isonen":
             return self.contestant_isonen(
                 first_name=first_name,
                 last_name=last_name,
@@ -58,25 +63,25 @@ class ContestantProvider(BaseProvider):
                 age_class=age_class_,
                 club=club_,
             )
-        else:  # sportsadmin
-            return self.contestant_sportsadmin(
-                first_name=first_name,
-                last_name=last_name,
-                date_of_birth=date_of_birth_,
-                sex=sex_,
-                age_class=age_class_,
-                club=club_,
-            )
+        # sportsadmin
+        return self.contestant_sportsadmin(
+            first_name=first_name,
+            last_name=last_name,
+            date_of_birth=date_of_birth_,
+            sex=sex_,
+            age_class=age_class_,
+            club=club_,
+        )
 
-    def contestant_isonen(
+    def contestant_isonen(  # noqa:PLR0917
         self,
         first_name: str,
         last_name: str,
         date_of_birth: date,
         sex: SexLiteral,
-        club: dict[str, Union[str, int]],
+        club: dict[str, str | int],
         age_class: str,
-    ) -> Dict[str, Union[int, str, date, SexLiteral]]:
+    ) -> dict[str, int | str | date | SexLiteral]:
         """Generates a basic profile with personal informations.
 
         Args:
@@ -98,8 +103,8 @@ class ContestantProvider(BaseProvider):
             "Adresse": self.generator.street_address(),
             "Postnummer": self.generator.postcode(),
             "Sted": self.generator.city(),
-            "Alder": date.today().year - date_of_birth.year,
-            "Fødselsdato": date_of_birth,
+            "Alder": datetime.now(tz=UTC).year - date_of_birth.year,
+            "Fødselsdato": date_of_birth.strftime("%d.%m.%Y"),
             "Kjønn": sex,
             "Land": self.generator.current_country(),
             "Landskode": self.generator.current_country_code(),
@@ -111,8 +116,8 @@ class ContestantProvider(BaseProvider):
             "Krets/region-id": self.random_number(digits=3, fix_len=True),
             "Krets/region": "Oslo Skikrets",
             "Sport": "Ski",
-            "Øvelse": age_class,
-            "Klasse": "",
+            "Øvelse": "",
+            "Klasse": age_class,
             "Team": "",
             "Påmeldt dato": self.generator.date_this_year(
                 before_today=True, after_today=False
@@ -120,15 +125,15 @@ class ContestantProvider(BaseProvider):
             "Påmeldt kl.": self.generator.time_object().strftime("%H:%M"),
         }
 
-    def contestant_sportsadmin(
+    def contestant_sportsadmin(  # noqa:PLR0917
         self,
         first_name: str,
         last_name: str,
         date_of_birth: date,
         sex: SexLiteral,
-        club: dict[str, Union[str, int]],
+        club: dict[str, str | int],
         age_class: str,
-    ) -> Dict[str, Union[int, str, date, SexLiteral]]:
+    ) -> dict[str, int | str | date | SexLiteral]:
         """Generates a basic profile with personal informations.
 
         Args:
@@ -145,7 +150,7 @@ class ContestantProvider(BaseProvider):
         return {
             "Klasse": age_class,
             "Øvelse": "sprint klassisk",
-            "Dato": datetime.today().strftime("%d.%m.%Y"),
+            "Dato": datetime.now(tz=UTC).strftime("%d.%m.%Y"),
             "Kl.": "800",
             "Etternavn": last_name,
             "Fornavn": first_name,
@@ -163,9 +168,9 @@ class ContestantProvider(BaseProvider):
             "Lagleder": "",
             "Mobil lagleder": "",
             "E-post lagleder": "",
-            "Dummy": "",
-            "Dummy": "",
-            "Dummy": "",
+            "Dummy-1": "",
+            "Dummy-2": "",
+            "Dummy-3": "",
             "Betalt/påmeldt dato": self.generator.date_time_this_year(
                 before_now=True, after_now=False
             ).strftime("%d.%m.%Y %H:%M:%S"),
@@ -175,60 +180,67 @@ class ContestantProvider(BaseProvider):
         }
 
 
-def calculate_age_class(format: str, sex: SexLiteral, age: int) -> str:  # noqa: C901
-    """Calculates age-class based on sex and age.
+# The skiing season starts in August and ends in July the following year.
+SEASON_START_MONTH = 8
+
+
+def calculate_age_class(  # noqa: C901
+    output_format: str,
+    sex: SexLiteral,
+    date_of_birth: date,
+    today: date,
+) -> str:
+    """Calculates age-class based on sex, date of birth and the current season.
+
+    The skiing season runs from August through July. A contestant competes in the
+    class equal to the age they reach in the calendar year the season ends. E.g. a
+    contestant born in 2017 competes in class 10 from August 2026 to July 2027.
 
     Args:
-        format (str): the format of the resulting contestant
+        output_format (str): the output format of the resulting contestant
         sex (SexLiteral): the sex of the contestant ('K' or 'M')
-        age (int): the age of the contestant
+        date_of_birth (date): the birthdate of the contestant
+        today (date): the reference date, determines the current season
 
     Returns:
         str: the age-class of the contestant
     """
-    # TODO: This is not correct, but it is the best we can do for now.
-    if format == "sportsadmin":
-        if age < 17:
+    season_end_year = (
+        today.year + 1 if today.month >= SEASON_START_MONTH else today.year
+    )
+    age_class = season_end_year - date_of_birth.year
+
+    if output_format == "sportsadmin":
+        if age_class < 17:
             if sex == "K":
-                return f"J {age} år"
-            else:
-                return f"G {age} år"
-        elif age < 19:
+                return f"J {age_class} år"
+            return f"G {age_class} år"
+        if age_class < 19:
             if sex == "K":
-                return f"K {age} år"
-            else:
-                return f"M {age} år"
-        elif age < 21:
+                return f"K {age_class} år"
+            return f"M {age_class} år"
+        if age_class < 21:
             if sex == "K":
                 return "K 19/20 år"
-            else:
-                return "M 19/20 år"
-        else:
-            if sex == "K":
-                return "Kvinner senior"
-            else:
-                return "Menn senior"
-    else:
-        if age < 17:
-            if sex == "K":
-                return f"Jenter {age}"
-            else:
-                return f"Gutter {age}"
-        elif age < 19:
-            if sex == "K":
-                return f"Kvinner {age}"
-            else:
-                return f"Menn {age}"
-        elif age < 21:
-            if sex == "K":
-                return "Kvinner 19-20"
-            else:
-                return "Menn 19-20"
-        else:
-            if sex == "K":
-                return "Kvinner senior"
-            else:
-                return "Menn senior"
+            return "M 19/20 år"
+        if sex == "K":
+            return "Kvinner senior"
+        return "Menn senior"
+    if age_class < 17:
+        if sex == "K":
+            return f"Jenter {age_class}"
+        return f"Gutter {age_class}"
+    if age_class < 19:
+        if sex == "K":
+            return f"Kvinner {age_class}"
+        return f"Menn {age_class}"
+    if age_class < 21:
+        if sex == "K":
+            return "Kvinner 19-20"
+        return "Menn 19-20"
+    if sex == "K":
+        return "Kvinner senior"
+    return "Menn senior"
 
 
 # Create a list of clubs in Oslo:
