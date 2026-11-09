@@ -163,3 +163,30 @@ def test_cli_with_value_for_sex_and_age_men(tmp_path: Path) -> None:
             assert class_number in {17 + season_offset(), 18 + season_offset()}
             expected = f"Menn {class_number}" if class_number < 19 else "Menn 19-20"
             assert fields[21] == expected
+
+
+def test_cli_with_format_sportsadmin_has_three_dummy_columns(tmp_path: Path) -> None:
+    """Should write three columns with header 'Dummy', as in Sportsadmin exports."""
+    runner = CliRunner()
+    output_file = tmp_path / "test.csv"
+    result = runner.invoke(
+        cli, ["-o", str(output_file), "--format", "Sportsadmin", "-n", "1"]
+    )
+    assert result.exit_code == 0, result.output
+    with output_file.open() as file:
+        lines = file.read().splitlines()
+    header = lines[2].split(";")
+    assert header.count("Dummy") == 3
+    assert not any(column.startswith("Dummy-") for column in header)
+    assert len(lines[3].split(";")) == len(header)
+
+
+def test_cli_with_output_format_option(tmp_path: Path) -> None:
+    """Should accept --output-format as well as the --format alias."""
+    runner = CliRunner()
+    output_file = tmp_path / "test.csv"
+    result = runner.invoke(
+        cli, ["-o", str(output_file), "--output-format", "iSonen", "-n", "1"]
+    )
+    assert result.exit_code == 0, result.output
+    assert "Output format: iSonen" in result.output

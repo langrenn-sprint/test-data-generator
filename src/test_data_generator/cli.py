@@ -16,7 +16,9 @@ logging.basicConfig(level=getenv("LOGGING_LEVEL", logging.INFO))
 @click.option("--outputfile", "-o", help="Output file name.", required=True)
 @click.option(
     "--output-format",
+    "--format",
     "-f",
+    "output_format",
     help="Output file format.",
     type=click.Choice(["Sportsadmin", "iSonen"], case_sensitive=False),
     required=True,

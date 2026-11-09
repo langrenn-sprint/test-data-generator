@@ -1,6 +1,7 @@
 """Generate a test dataset (csv) with the given number of rows."""
 
 import csv
+import re
 from pathlib import Path
 
 from faker import Faker
@@ -77,4 +78,6 @@ def get_columns(
         maximum_age=maximum_age,
         sex=sex,
     )
-    return list(_contestant.keys())
+    # Dict keys must be unique, but some formats (e.g. Sportsadmin) have
+    # several columns with the same header, e.g. "Dummy-1", "Dummy-2" -> "Dummy":
+    return [re.sub(r"^(Dummy)-\d+$", r"\1", key) for key in _contestant]
